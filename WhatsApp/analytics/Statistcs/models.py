@@ -11,6 +11,7 @@ from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 from datetime import datetime
 import os
+from PIL import Image,ImageColor
 
 
 def extract_emojis(s):
@@ -124,8 +125,8 @@ def wordCloudText(df):
     mask = 255 * mask.astype(int)
 
     stopwords = set(STOPWORDS)
-    stopwords.update(["da", "pra", "a", "de", "tem", "e", "o", "é", "ele", "https","q","em","um","aí","na", "como", "foi", "só", "por", "dele", "essa", "deve", "ser", "que", "tá", "eu", "se", "era", "meu", "ma", "mas", "não", "n", "uma", "um", "este", "esta", "estes", "estas", "isto", "esse", "essa", "esses", "essas", "isso", "aquele", "aquela", "aqueles", "aquelas", "aquilo", "V./VV", "Sr", "Sr.ª", "Srs.", "Srª.s", "V. Ex.ª/V. Ex.ªs", "V. Mag.ª", "V. Mag.ªs"," V. S.ª", "V. S.ªs", "VM", "VVMM", "V.V.A. A", "V.A", "V.S"," V. Ex.ª", "V. Em.ªs", "V. Rev.m.ª", "V. Rev.m.ªs", "algum", "alguma", "alguns", "algumas", "nenhum", "nenhuma", "nenhuns", "nenhumas", "muito", "muita", "muitos", "muitas", "pouco", "pouca", "poucos", "poucas", "todo", "toda", "todos", "todas", "outro", "outra", "outros", "outras", "certo", "certa", "certos", "certas", "vário", "vária", "vários", "várias", "tanto", "tanta", "tantos", "tantas", "quanto", "quanta", "quantos", "quantas", "qualquer", "quaisquer", "qual", "quais", "um", "uma", "uns", "umas", "quem", "alguém", "ninguém", "tudo", "nada", "outrem", "algo", "cada", "qual", "quais", "quanto", "quantos", "quanta", "quantas", "quem", "que", "qnt", "qnts", "qnto", "td", "tds", "nd", "q", "qlqr", "vc", "vcs", "tu", "ti", "você", "ocê", "cê", "c"])
-    wordcloud = WordCloud(stopwords=stopwords, max_font_size=600, max_words=100, scale = 3, width = 1920, height = 1080,  background_color="white", mask = mask).generate(text)
+    stopwords.update(["da", "pra", "a", "de", "tem", "e", "o", "é", "ele", "https","q","em","um","aí","na", "mai", "como", "foi", "só", "por", "mais", "dele", "essa", "deve", "ser", "que", "tá", "eu", "se", "era", "meu", "ma", "mas", "não", "n", "uma", "um", "este", "esta", "estes", "estas", "isto", "esse", "essa", "esses", "essas", "isso", "aquele", "aquela", "aqueles", "aquelas", "aquilo", "V./VV", "Sr", "Sr.ª", "Srs.", "Srª.s", "V. Ex.ª/V. Ex.ªs", "V. Mag.ª", "V. Mag.ªs"," V. S.ª", "V. S.ªs", "VM", "VVMM", "V.V.A. A", "V.A", "V.S"," V. Ex.ª", "V. Em.ªs", "V. Rev.m.ª", "V. Rev.m.ªs", "algum", "alguma", "alguns", "algumas", "nenhum", "nenhuma", "nenhuns", "nenhumas", "muito", "muita", "muitos", "muitas", "pouco", "pouca", "poucos", "poucas", "todo", "toda", "todos", "todas", "outro", "outra", "outros", "outras", "certo", "certa", "certos", "certas", "vário", "vária", "vários", "várias", "tanto", "tanta", "tantos", "tantas", "quanto", "quanta", "quantos", "quantas", "qualquer", "quaisquer", "qual", "quais", "um", "uma", "uns", "umas", "quem", "alguém", "ninguém", "tudo", "nada", "outrem", "algo", "cada", "qual", "quais", "quanto", "quantos", "quanta", "quantas", "quem", "que", "qnt", "qnts", "qnto", "td", "tds", "nd", "q", "qlqr", "vc", "vcs", "tu", "ti", "você", "ocê", "cê", "c"])
+    wordcloud = WordCloud(stopwords=stopwords, max_font_size=600, max_words=100, scale = 3, width = 1920, height = 1080,  background_color=ImageColor.getrgb("#F2F1F1"), mask = mask).generate(text)
     wordCloudfile_name = "wordcloud.png"
     wordcloud.to_file(wordCloudfile_name)
     return wordCloudfile_name

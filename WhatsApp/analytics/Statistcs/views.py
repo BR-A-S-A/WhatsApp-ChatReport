@@ -15,7 +15,7 @@ def upload(request):
         fs = FileSystemStorage()
         name = fs.save(str(ts) + "_" + uploaded_file.name, uploaded_file)
         context['url'] = fs.url(name)
-    return render(request, './upload.html', context)
+    return render(request, 'upload.html', context)
 
 def index(request, file_name):
     controller = Statistcs.controller.StatistcsController(file_name)
