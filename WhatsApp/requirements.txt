@@ -8,7 +8,6 @@ pandas
 emoji
 wordcloud
 plotly
-json
 regex
 #
 ###### Additional Requirements without Version Specifiers ######
