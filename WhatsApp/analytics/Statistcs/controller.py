@@ -17,7 +17,7 @@ class StatistcsController():
     media_messages_df = None
     file_name = None
 
-    def __init__(self, file_name = None):
+    def __init__(self, file_name = None):            
         self.file_name = file_name
         self.df = self.__get_df()
         self.media_messages_df = self.__get_messages_df()[0]
@@ -69,12 +69,12 @@ class StatistcsController():
         return self.df.to_json(orient = "records")
 
     def get_all(self):    
-        print(self.df)
         startTime = datetime.now()
+        print(self.media_messages_df)
         result = {}
         result['totalMessages'] = int(self.df.shape[0])
         print('totalMessages: ', datetime.now() - startTime)
-        result['mediaMessages'] = Statistcs.models.get_total_media_messages(self.df)
+        result['mediaMessages'] = int(self.media_messages_df.shape[0])
         print('totalMedias: ', datetime.now() - startTime)
         result['emojis'] = int(sum(self.df['emoji'].str.len()))
         print('totalEmojis: ', datetime.now() - startTime)

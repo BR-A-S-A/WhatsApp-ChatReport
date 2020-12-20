@@ -54,15 +54,6 @@ def get_data_point(line):
         author = None
     return date, time, author, message
 
-
-def get_total_media_messages(df):
-    total = 0
-    for index, row in df.iterrows():
-        if row['Message'] == "<arquivo de mídia oculto>":
-            total += 1
-    return total
-
-
 def list_of_days(i):
   l = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"]
   return l[i]
