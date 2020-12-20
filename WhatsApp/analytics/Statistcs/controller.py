@@ -28,10 +28,8 @@ class StatistcsController():
         startTime = datetime.now()
         URLPATTERN = r"(http(s?)\:)"
         parsedData = [] # List to keep track of data so it can be used by a Pandas dataframe
-        # Upload your file here
         if self.file_name != None:
-         conversationPath = '..//analytics//'+self.file_name # chat file
-
+            conversationPath = '..//analytics//'+self.file_name # chat file
         with open(conversationPath, encoding="utf-8") as fp:   
             messageBuffer = [] 
             messageArray = []
@@ -41,7 +39,7 @@ class StatistcsController():
                 messageArray.append(line)
                 if not line: 
                     break
-                line = line.strip() 
+                line = line.strip()
                 if Statistcs.models.starts_with_date_and_time(line): 
                     date, time, author, message = Statistcs.models.get_data_point(line) 
                     messageBuffer.clear() 
@@ -49,9 +47,7 @@ class StatistcsController():
                     if len(messageBuffer) > 0 and author != None:
                         parsedData.append([date, time, author, ' '.join(messageBuffer).lower(), Statistcs.models.extract_emojis(messageBuffer)])  
                 else:
-                    messageBuffer.append(line)
-
-        
+                    messageBuffer.append(line)  
         df = pd.DataFrame(parsedData, columns=['Date', 'Time', 'Author', 'Message', 'emoji']) # Initialising a pandas Dataframe.
         df["Date"] = pd.to_datetime(df["Date"])
         df['urlcount'] = df.Message.apply(lambda x: re.findall(URLPATTERN, x)).str.len()
