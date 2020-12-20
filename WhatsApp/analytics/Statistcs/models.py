@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import os
 from PIL import Image,ImageColor
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 
 def extract_emojis(s):
@@ -31,8 +33,6 @@ def find_author(s):
         '([\w]+):',                        # First Name
         '([\w]+[\s]+[\w]+):',              # First Name + Last Name
         '([\w]+[\s]+[\w]+[\s]+[\w]+):',    # First Name + Middle Name + Last Name
-        '([+]\d{2} \d{5} \d{5}):',         # Mobile Number (India)
-        '([+]\d{2} \d{3} \d{3} \d{4}):',   # Mobile Number (US)
         '([+]\d{2} \d{2} \d{4}-?\d{4}):',   # Mobile Number (BR)
         '([\w]+)[\u263a-\U0001f999]+:',    # Name and Emoji              
     ]
@@ -69,8 +69,6 @@ def list_of_days(i):
   return l[i]
   
 def dayofweek(messages_df, format):
-    plotly.io.orca.config.executable = 'C:/Users/joaov/anaconda3/orca_app/orca.exe'
-    plotly.io.orca.config.save()
     day_df = pd.DataFrame(messages_df["Message"])
     day_df['day_of_date'] = messages_df['Date'].dt.weekday
     day_df['day_of_date'] = day_df["day_of_date"].apply(list_of_days)
@@ -82,15 +80,19 @@ def dayofweek(messages_df, format):
         return day.to_json(orient = "records")
 
     fig = px.line_polar(day, r='messagecount', theta='day_of_date', line_close=True)
-    fig.update_traces(fill='toself')
+    fig.update_traces(fill='toself', fillcolor = 'rgba(0,208,14,0.7)', line_color = '#002574')
     fig.update_layout(
     polar=dict(
         radialaxis=dict(
-        visible=True,
-        range=[0,8000]
-        )),
-    showlegend=True
+        visible=True)),
+    showlegend=True,
+    paper_bgcolor = '#F2F1F1',
+    font_size= 20,
     )
+    fig.update_polars(radialaxis_autorange= True, radialaxis_color= '#000000', angularaxis_color= '#000000',
+    angularaxis_tickfont_size = 27, angularaxis_linewidth = 2, angularaxis_linecolor = '#002574', 
+    angularaxis_tickwidth= 3, angularaxis_ticks='outside', angularaxis_ticklen=7 , angularaxis_gridcolor= 'rgba(0,14,80,0.7)')
+
     fig.show()
     fig.write_image("dayofweek.png")
     path = './dayofweek.png'
