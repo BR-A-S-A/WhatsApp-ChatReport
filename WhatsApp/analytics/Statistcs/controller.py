@@ -54,6 +54,7 @@ class StatistcsController():
         
         df = pd.DataFrame(parsedData, columns=['Date', 'Time', 'Author', 'Message', 'emoji']) # Initialising a pandas Dataframe.
         df["Date"] = pd.to_datetime(df["Date"])
+        df["emoji"] = df["Message"].apply(Statistcs.models.extract_emojis)
         df['urlcount'] = df.Message.apply(lambda x: re.findall(URLPATTERN, x)).str.len()
         print('Dataframe creation: ', datetime.now() - startTime)
         return df

@@ -71,7 +71,7 @@ def dayofweek(messages_df, format):
         return day.to_json(orient = "records")
 
     fig = px.line_polar(day, r='messagecount', theta='day_of_date', line_close=True)
-    fig.update_traces(fill='toself', fillcolor = 'rgba(0,120,14,0.6)', line_color = '#002574')
+    fig.update_traces(fill='toself', fillcolor = 'rgba(0,174,14,0.7)', line_color = '#002574')
     fig.update_layout(
     polar=dict(
         radialaxis=dict(
@@ -93,26 +93,29 @@ def emojiDist(emoji_df, format=None):
     if format == 'json':
         return emoji_df.to_json(orient = "records")
 
-    fig = px.bar(emoji_df, y='count', x='emoji', width = 1920, height = 1080, text = 'count')
+    fig = px.bar(emoji_df, y='count', x='emoji', width = 1920, height = 1080)
+
     fig.update_xaxes(
-        title_text = "Emojis",
-        title_font = {"size": 35},
-        title_standoff = 25,
+       title_text = "Emojis",
+       title_font = {"size": 35},
+       title_standoff = 25,
         showline=True, linewidth=2, linecolor='black')
 
     fig.update_yaxes(
-        title_text = "Quantidade",
-        title_standoff = 35,
-        showline=True, linewidth=2, linecolor='black')
+       title_text = "Quantidade",
+       title_standoff = 35,
+       showline=True, linewidth=2, linecolor='black')
 
     fig.update_layout(
-    showlegend= False,  
-    paper_bgcolor = '#F2F1F1',
-    font_size= 30
-    )
+       showlegend= False,  
+       paper_bgcolor = '#F2F1F1',
+       font_size= 30)
+
     fig.update_traces(textfont_size = 70, 
     textfont_color = '#000000',
-    marker = dict(color = 'rgba(0,120,14,0.6)',line = dict(color='#002574', width=2)))
+    marker = dict(color = 'rgba(0,174,14,0.7)',line = dict(color='#002574', width=2)))
+
+
     fig.write_image("emojiDistribution.png")
     path = './emojiDistribution.png'
     return path
@@ -127,8 +130,24 @@ def wordCloudText(df):
     mask = 255 * mask.astype(int)
 
     stopwords = set(STOPWORDS)
-    stopwords.update(["da", "pra", "a", "de", "tem", "e", "o", "é", "ele", "https","q","em","um","aí","na", "mai", "como", "foi", "só", "por", "mais", "dele", "essa", "deve", "ser", "que", "tá", "eu", "se", "era", "meu", "ma", "mas", "não", "n", "uma", "um", "este", "esta", "estes", "estas", "isto", "esse", "essa", "esses", "essas", "isso", "aquele", "aquela", "aqueles", "aquelas", "aquilo", "V./VV", "Sr", "Sr.ª", "Srs.", "Srª.s", "V. Ex.ª/V. Ex.ªs", "V. Mag.ª", "V. Mag.ªs"," V. S.ª", "V. S.ªs", "VM", "VVMM", "V.V.A. A", "V.A", "V.S"," V. Ex.ª", "V. Em.ªs", "V. Rev.m.ª", "V. Rev.m.ªs", "algum", "alguma", "alguns", "algumas", "nenhum", "nenhuma", "nenhuns", "nenhumas", "muito", "muita", "muitos", "muitas", "pouco", "pouca", "poucos", "poucas", "todo", "toda", "todos", "todas", "outro", "outra", "outros", "outras", "certo", "certa", "certos", "certas", "vário", "vária", "vários", "várias", "tanto", "tanta", "tantos", "tantas", "quanto", "quanta", "quantos", "quantas", "qualquer", "quaisquer", "qual", "quais", "um", "uma", "uns", "umas", "quem", "alguém", "ninguém", "tudo", "nada", "outrem", "algo", "cada", "qual", "quais", "quanto", "quantos", "quanta", "quantas", "quem", "que", "qnt", "qnts", "qnto", "td", "tds", "nd", "q", "qlqr", "vc", "vcs", "tu", "ti", "você", "ocê", "cê", "c"])
-    wordcloud = WordCloud(collocations = True, collocation_threshold = 31, min_font_size = 6, stopwords=stopwords, max_font_size=600, max_words= 92, scale = 3, width = 1920, height = 1080,  background_color=ImageColor.getrgb("#F2F1F1"), mask = mask).generate(text)
+    stopwords.update(["da", "pra", "a", "de", "tem", "e", "o", "é", "ele", 
+    "https","q","em","um","aí","na", "mai", "como", "foi", "só", "por", "mais", 
+    "dele", "essa", "deve", "ser", "que", "tá", "eu", "se", "era", "meu", "ma",
+    "mas", "não", "n", "uma", "um", "este", "esta", "estes", "estas", "isto", "esse",
+    "essa", "esses", "essas", "isso", "aquele", "aquela", "aqueles", "aquelas", "aquilo",
+    "v./vv", "sr", "sra", "srs", "sras", "algum", "alguma", "alguns", "algumas", "nenhum", 
+    "nenhuma", "nenhuns", "nenhumas", "muito", "muita", "muitos", "muitas", "pouco", "pouca",
+    "poucos", "poucas", "todo", "toda", "todos", "todas", "outro", "outra", "outros", 
+    "outras", "certo", "certa", "certos", "certas", "vário", "vária", "vários", "várias",
+    "tanto", "tanta", "tantos", "tantas", "quanto", "quanta", "quantos", "quantas", "qualquer", 
+    "quaisquer", "qual", "quais", "um", "uma", "uns", "umas", "quem", "alguém", "ninguém", "tudo",
+    "nada", "outrem", "algo", "cada", "qual", "quais", "quanto", "quantos", "quanta", "quantas", "quem", 
+    "que", "qnt", "qnts", "qnto", "td", "tds", "nd", "q", "qlqr", "vc", "vcs", "tu", "ti", "você", "ocê", "cê", "c"])
+
+    wordcloud = WordCloud(collocations = True, collocation_threshold = 31, min_font_size = 6, 
+    stopwords=stopwords, max_font_size=600, max_words= 92, scale = 3, width = 1920, height = 1080,  
+    background_color=ImageColor.getrgb("#F2F1F1"), mask = mask).generate(text)
+
     wordCloudfile_name = "wordcloud.png"
     wordcloud.to_file(wordCloudfile_name)
     return wordCloudfile_name
@@ -167,7 +186,7 @@ def get_emoji_by_user(name, messages_df, format = None):
 
             fig.update_traces(textfont_size = 70, 
             textfont_color = '#000000',
-            marker = dict(color = 'rgba(0,120,14,0.6)',line = dict(color='#002574', width=2)))
+            marker = dict(color = 'rgba(0,174,14,0.7)',line = dict(color='#002574', width=2)))
             fig.update_layout(
             showlegend= False,  
             paper_bgcolor = '#F2F1F1',
