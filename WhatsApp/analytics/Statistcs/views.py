@@ -26,9 +26,8 @@ def get_user(request, file_name):
     return JsonResponse(controller.get_user())
 
 def get_emoji_dist(request, file_name):
-    format = request.GET.get('format')
     controller = Statistcs.controller.StatistcsController(file_name)
-    return HttpResponse(controller.emojiDistCall(format))
+    return FileResponse(open(controller.emojiDistCall(), 'rb'))
 
 def get_wordcloud(request, file_name):
     controller = Statistcs.controller.StatistcsController(file_name)

@@ -1,0 +1,17 @@
+#
+####### example-requirements.txt #######
+#
+###### Requirements without Version Specifiers ######
+django
+djangorestframework
+pandas
+emoji
+wordcloud
+plotly
+regex
+#
+###### Additional Requirements without Version Specifiers ######
+#   Same as 1st section, just here to show that you can put things in any order.
+rejected
+green
+#

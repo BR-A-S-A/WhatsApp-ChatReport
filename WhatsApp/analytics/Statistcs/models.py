@@ -55,15 +55,6 @@ def get_data_point(line):
         author = None
     return date, time, author, message
 
-
-def get_total_media_messages(df):
-    total = 0
-    for index, row in df.iterrows():
-        if row['Message'] == "<arquivo de mídia oculto>":
-            total += 1
-    return total
-
-
 def list_of_days(i):
   l = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"]
   return l[i]
@@ -80,17 +71,17 @@ def dayofweek(messages_df, format):
         return day.to_json(orient = "records")
 
     fig = px.line_polar(day, r='messagecount', theta='day_of_date', line_close=True)
-    fig.update_traces(fill='toself', fillcolor = 'rgba(0,208,14,0.7)', line_color = '#002574')
+    fig.update_traces(fill='toself', fillcolor = 'rgba(0,120,14,0.6)', line_color = '#002574')
     fig.update_layout(
     polar=dict(
         radialaxis=dict(
         visible=True)),
     showlegend=True,
     paper_bgcolor = '#F2F1F1',
-    font_size= 20,
+    font_size= 15,
     )
     fig.update_polars(radialaxis_autorange= True, radialaxis_color= '#000000', angularaxis_color= '#000000',
-    angularaxis_tickfont_size = 27, angularaxis_linewidth = 2, angularaxis_linecolor = '#002574', 
+    angularaxis_tickfont_size = 20, angularaxis_linewidth = 2, angularaxis_linecolor = '#002574', 
     angularaxis_tickwidth= 3, angularaxis_ticks='outside', angularaxis_ticklen=7 , angularaxis_gridcolor= 'rgba(0,14,80,0.7)')
 
     fig.show()
@@ -102,20 +93,29 @@ def emojiDist(emoji_df, format=None):
     if format == 'json':
         return emoji_df.to_json(orient = "records")
 
-    fig = px.pie(emoji_df, values='count', names='emoji',
-                title='Emoji Distribution')
-    fig.update_traces(textposition='inside', textinfo='percent+label')
-    fig.write_html("emojiDistribution.html")
-    path = './emojiDistribution.html'
-    htmlContent = ""
-    with open(path, encoding="utf-8") as fp:
-            while True:
-                line = fp.readline()
-                if not line: 
-                    break
-                line = line.strip() 
-                htmlContent += line
-    return htmlContent
+    fig = px.bar(emoji_df, y='count', x='emoji', width = 1920, height = 1080, text = 'count')
+    fig.update_xaxes(
+        title_text = "Emojis",
+        title_font = {"size": 35},
+        title_standoff = 25,
+        showline=True, linewidth=2, linecolor='black')
+
+    fig.update_yaxes(
+        title_text = "Quantidade",
+        title_standoff = 35,
+        showline=True, linewidth=2, linecolor='black')
+
+    fig.update_layout(
+    showlegend= False,  
+    paper_bgcolor = '#F2F1F1',
+    font_size= 30
+    )
+    fig.update_traces(textfont_size = 70, 
+    textfont_color = '#000000',
+    marker = dict(color = 'rgba(0,120,14,0.6)',line = dict(color='#002574', width=2)))
+    fig.write_image("emojiDistribution.png")
+    path = './emojiDistribution.png'
+    return path
 
 def wordCloudText(df):
     text = ', '.join(df.Message)
@@ -128,13 +128,12 @@ def wordCloudText(df):
 
     stopwords = set(STOPWORDS)
     stopwords.update(["da", "pra", "a", "de", "tem", "e", "o", "é", "ele", "https","q","em","um","aí","na", "mai", "como", "foi", "só", "por", "mais", "dele", "essa", "deve", "ser", "que", "tá", "eu", "se", "era", "meu", "ma", "mas", "não", "n", "uma", "um", "este", "esta", "estes", "estas", "isto", "esse", "essa", "esses", "essas", "isso", "aquele", "aquela", "aqueles", "aquelas", "aquilo", "V./VV", "Sr", "Sr.ª", "Srs.", "Srª.s", "V. Ex.ª/V. Ex.ªs", "V. Mag.ª", "V. Mag.ªs"," V. S.ª", "V. S.ªs", "VM", "VVMM", "V.V.A. A", "V.A", "V.S"," V. Ex.ª", "V. Em.ªs", "V. Rev.m.ª", "V. Rev.m.ªs", "algum", "alguma", "alguns", "algumas", "nenhum", "nenhuma", "nenhuns", "nenhumas", "muito", "muita", "muitos", "muitas", "pouco", "pouca", "poucos", "poucas", "todo", "toda", "todos", "todas", "outro", "outra", "outros", "outras", "certo", "certa", "certos", "certas", "vário", "vária", "vários", "várias", "tanto", "tanta", "tantos", "tantas", "quanto", "quanta", "quantos", "quantas", "qualquer", "quaisquer", "qual", "quais", "um", "uma", "uns", "umas", "quem", "alguém", "ninguém", "tudo", "nada", "outrem", "algo", "cada", "qual", "quais", "quanto", "quantos", "quanta", "quantas", "quem", "que", "qnt", "qnts", "qnto", "td", "tds", "nd", "q", "qlqr", "vc", "vcs", "tu", "ti", "você", "ocê", "cê", "c"])
-    wordcloud = WordCloud(stopwords=stopwords, max_font_size=600, max_words=100, scale = 3, width = 1920, height = 1080,  background_color=ImageColor.getrgb("#F2F1F1"), mask = mask).generate(text)
+    wordcloud = WordCloud(collocations = True, collocation_threshold = 31, min_font_size = 6, stopwords=stopwords, max_font_size=600, max_words= 92, scale = 3, width = 1920, height = 1080,  background_color=ImageColor.getrgb("#F2F1F1"), mask = mask).generate(text)
     wordCloudfile_name = "wordcloud.png"
     wordcloud.to_file(wordCloudfile_name)
     return wordCloudfile_name
 
 def get_emoji_by_user(name, messages_df, format = None):
-    # Creates a list of unique Authors - ['Manikanta', 'Teja Kura', .........]
     l = messages_df.Author.unique()
     for i in range(len(l)):
         if (l[i] == name):
@@ -149,7 +148,32 @@ def get_emoji_by_user(name, messages_df, format = None):
                 return author_emoji_df.to_json(orient = "records")
 
             fig = px.bar(author_emoji_df, x='emoji', y='count')
-            fig.update_traces(textposition='inside')
+            fig.update_xaxes(
+            title_text = "Emojis",
+            title_font = {"size": 35},
+            title_standoff = 25,
+            showline=True, linewidth=2, linecolor='black')
+
+            fig.update_yaxes(
+            title_text = "Quantidade",
+            title_standoff = 35,
+            showline=True, linewidth=2, linecolor='black')
+
+            fig.update_layout(
+            showlegend= False,  
+            paper_bgcolor = '#F2F1F1',
+            font_size= 30
+            )
+
+            fig.update_traces(textfont_size = 70, 
+            textfont_color = '#000000',
+            marker = dict(color = 'rgba(0,120,14,0.6)',line = dict(color='#002574', width=2)))
+            fig.update_layout(
+            showlegend= False,  
+            paper_bgcolor = '#F2F1F1',
+            font_size= 60
+            )
+            fig.update_traces(textposition='inside', textinfo='label', marker = dict(line = dict(color='#002574', width=2)))
             fig.write_image('./emoji_by_' + name + '.png')
             path = './emoji_by_' + name + '.png'
             return path
